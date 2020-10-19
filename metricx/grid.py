@@ -1,4 +1,4 @@
-from typing import List
+from typing import Dict, List
 
 import numpy as np
 import pandas as pd
@@ -28,8 +28,10 @@ class TaskGrid:
     """
 
     def __init__(self, tasks: List[Task]):
-        self.tasks = {}
+        self.tasks: Dict[str, Task] = {}
         for task in tasks:
+            if task.name in self.tasks:
+                raise ValueError("Task names must be unique.")
             self.tasks[task.name] = task
 
     def to_html(self, path_to_html):

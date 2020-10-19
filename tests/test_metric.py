@@ -8,7 +8,7 @@ class TestMetric(unittest.TestCase):
         metric = Metric(
             name="auroc", description="Area under ROC curve.", is_higher_better=True
         )
-        assert repr(metric) == "Metric('auroc', 'Area under ROC curve.', True)"
+        self.assertEqual(repr(metric), "Metric('auroc', 'Area under ROC curve.', True)")
 
     def test_equality(self):
         metric1 = Metric(
@@ -22,5 +22,5 @@ class TestMetric(unittest.TestCase):
             description="Recall at top ten.",
             is_higher_better=True,
         )
-        assert metric1 == metric2
-        assert metric1 != metric3
+        self.assertEqual(metric1, metric2)
+        self.assertNotEqual(metric1, metric3)

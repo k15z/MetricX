@@ -52,7 +52,8 @@ class Task:
         self.results: Dict[str, List[Dict[str, float]]] = {}
 
         for metric in metrics:
-            assert metric.name not in self.metrics
+            if metric.name in self.metrics:
+                raise ValueError("Metric names must be unique.")
             self.metrics[metric.name] = metric
         self.default_metric = metrics[0]
 

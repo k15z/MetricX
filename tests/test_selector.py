@@ -15,8 +15,8 @@ class TestSelector(unittest.TestCase):
         selector = Selector(task)
 
         task.report("model-1", {"score": 1.0, "fit-time": 1.0})
-        assert selector.propose() == "model-1"
+        self.assertEqual(selector.propose(), "model-1")
 
-        for _ in range(10):
+        for _ in range(100):
             model = selector.propose()
             task.report(model, {"score": 1.0, "fit-time": 1.0})
