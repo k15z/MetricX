@@ -210,6 +210,7 @@
 <a class="reference external image-reference" href="https://github.com/k15z/MetricX/actions"><img alt="Build Status" src="https://github.com/k15z/MetricX/workflows/Build%20Main/badge.svg" /></a>
 <a class="reference external image-reference" href="https://k15z.github.io/MetricX"><img alt="Documentation" src="https://github.com/k15z/MetricX/workflows/Documentation/badge.svg" /></a>
 <a class="reference external image-reference" href="https://codecov.io/gh/k15z/MetricX"><img alt="Code Coverage" src="https://codecov.io/gh/k15z/MetricX/branch/main/graph/badge.svg" /></a>
+<a class="reference external image-reference" href="https://badge.fury.io/py/metricx"><img alt="PyPI version" src="https://badge.fury.io/py/metricx.svg" /></a>
 <p>A library for managing, exploring, and analyzing benchmark data. Given a set of tasks
 and a set of models which can be evaluated on the tasks, <code class="docutils literal notranslate"><span class="pre">MetricX</span></code> provides tools
 for keeping track of results, exporting the benchmark results, and generating
@@ -267,8 +268,8 @@ the metrics specified earlier.</p>
 </div>
 <div class="section" id="generate-plots-and-rankings">
 <h3>Generate plots and rankings<a class="headerlink" href="#generate-plots-and-rankings" title="Permalink to this headline">¶</a></h3>
-<p>The <a class="reference internal" href="metricx.html#metricx.Task" title="metricx.Task"><code class="xref py py-class docutils literal notranslate"><span class="pre">Task</span></code></a> object provides numerous functionality from
-generating plots to ranking models.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Task</span></code> object provides numerous functionality from generating plots
+to ranking models.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">task</span><span class="o">.</span><span class="n">to_bokeh</span><span class="p">()</span> <span class="c1"># generate a Bokeh plot</span>
 <span class="n">task</span><span class="o">.</span><span class="n">to_figure</span><span class="p">()</span> <span class="c1"># generate a matplotlib Figure</span>
 <span class="n">task</span><span class="o">.</span><span class="n">rank</span><span class="p">()</span> <span class="c1"># return a ranking of models</span>
@@ -278,8 +279,8 @@ generating plots to ranking models.</p>
 <div class="section" id="combine-multiple-tasks">
 <h3>Combine multiple tasks<a class="headerlink" href="#combine-multiple-tasks" title="Permalink to this headline">¶</a></h3>
 <p>If you have multiple tasks, as is typical in a benchmarking scenario, you
-can use the <a class="reference internal" href="metricx.html#metricx.TaskGrid" title="metricx.TaskGrid"><code class="xref py py-class docutils literal notranslate"><span class="pre">TaskGrid</span></code></a> to wrap them together and generated
-combined visualizations and more.</p>
+can use the <code class="docutils literal notranslate"><span class="pre">TaskGrid</span></code> to wrap them together and generated combined
+visualizations and more.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">metricx</span> <span class="kn">import</span> <span class="n">TaskGrid</span>
 <span class="kn">from</span> <span class="nn">bokeh.io</span> <span class="kn">import</span> <span class="n">output_notebook</span><span class="p">,</span> <span class="n">show</span>
 
