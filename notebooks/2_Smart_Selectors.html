@@ -478,6 +478,8 @@ div.rendered_html tbody tr:hover {
 <span class="n">models</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;model-A&quot;</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">3.0</span><span class="p">),</span>
     <span class="s2">&quot;model-B&quot;</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="s2">&quot;model-C&quot;</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="s2">&quot;model-D&quot;</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">0.5</span><span class="p">),</span>
 <span class="p">}</span>
 <span class="k">for</span> <span class="n">model</span><span class="p">,</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">models</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
     <span class="n">task</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="n">func</span><span class="p">()})</span>
@@ -494,26 +496,18 @@ div.rendered_html tbody tr:hover {
 <span class="kn">from</span> <span class="nn">metricx</span> <span class="kn">import</span> <span class="n">Selector</span>
 
 <span class="n">selector</span> <span class="o">=</span> <span class="n">Selector</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">propose</span><span class="p">()</span>
     <span class="n">task</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="n">models</span><span class="p">[</span><span class="n">model</span><span class="p">]()})</span>
-<span class="n">task</span><span class="o">.</span><span class="n">to_figure</span><span class="p">()</span>
+<span class="n">task</span><span class="o">.</span><span class="n">to_figure</span><span class="p">();</span>
 </pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_2_Smart_Selectors_7_0.png" src="../_images/notebooks_2_Smart_Selectors_7_0.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_2_Smart_Selectors_7_1.png" src="../_images/notebooks_2_Smart_Selectors_7_1.png" />
+<img alt="../_images/notebooks_2_Smart_Selectors_7_0.png" src="../_images/notebooks_2_Smart_Selectors_7_0.png" />
 </div>
 </div>
 <p>Although the usage of the Selector class is optional, it’s highly recommended as it can reduce the number of samples needed to be able to confidently determine the ranking of the models.</p>
