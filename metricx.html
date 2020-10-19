@@ -250,10 +250,11 @@ models to run. The default policy is to:</p>
 <li><p>Sample from <cite>policies</cite>:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>(p=0.3) Sample a random model.</p></li>
-<li><p>(p=0.35) Select the model with the largest standard errror.</p></li>
-<li><p>(p=0.35) Select the model with the largest number of samples
+<li><p>(p=0.25) Sample a random model.</p></li>
+<li><p>(p=0.25) Select the model with the largest standard errror.</p></li>
+<li><p>(p=0.25) Select the model with the largest number of samples
 needed to achieve power.</p></li>
+<li><p>(p=0.25) Select the model with the largest upper confidence bound.</p></li>
 </ul>
 </div></blockquote>
 </li>
@@ -281,7 +282,7 @@ before the randomized policies are applied.</p>
 
 <dl class="attribute">
 <dt id="metricx.Selector.DEFAULT_POLICY">
-<code class="sig-name descname">DEFAULT_POLICY</code><em class="property"> = [(&lt;function random_policy&gt;, 0.3), (&lt;function stderr_policy&gt;, 0.35), (&lt;function power_policy&gt;, 0.35)]</em><a class="headerlink" href="#metricx.Selector.DEFAULT_POLICY" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">DEFAULT_POLICY</code><em class="property"> = [(&lt;function random_policy&gt;, 0.25), (&lt;function stderr_policy&gt;, 0.25), (&lt;function power_policy&gt;, 0.25), (&lt;function ucb_policy&gt;, 0.25)]</em><a class="headerlink" href="#metricx.Selector.DEFAULT_POLICY" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -337,6 +338,24 @@ the default metric.</p>
 <dt id="metricx.Task.get_metric">
 <code class="sig-name descname">get_metric</code><span class="sig-paren">(</span><em class="sig-param">metric: Union[str, metricx.metric.Metric, None]</em><span class="sig-paren">)</span> &#x2192; metricx.metric.Metric<a class="reference internal" href="_modules/metricx/task.html#Task.get_metric"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metricx.Task.get_metric" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="metricx.Task.likelihood">
+<code class="sig-name descname">likelihood</code><span class="sig-paren">(</span><em class="sig-param">rank: List[str], metric: Union[str, metricx.metric.Metric, None] = None, N: int = 1000</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/metricx/task.html#Task.likelihood"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metricx.Task.likelihood" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimate the likelihood of the given ranking.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rank</strong> – A proposed list of models sorted from best to worst.</p></li>
+<li><p><strong>metric</strong> – The target metric.</p></li>
+<li><p><strong>N</strong> – The number of samples to use for the estimation,</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A probability of the given ranking being the true ranking.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="metricx.Task.model_to_mu_var_n">
@@ -572,10 +591,11 @@ models to run. The default policy is to:</p>
 <li><p>Sample from <cite>policies</cite>:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>(p=0.3) Sample a random model.</p></li>
-<li><p>(p=0.35) Select the model with the largest standard errror.</p></li>
-<li><p>(p=0.35) Select the model with the largest number of samples
+<li><p>(p=0.25) Sample a random model.</p></li>
+<li><p>(p=0.25) Select the model with the largest standard errror.</p></li>
+<li><p>(p=0.25) Select the model with the largest number of samples
 needed to achieve power.</p></li>
+<li><p>(p=0.25) Select the model with the largest upper confidence bound.</p></li>
 </ul>
 </div></blockquote>
 </li>
@@ -603,7 +623,7 @@ before the randomized policies are applied.</p>
 
 <dl class="attribute">
 <dt id="metricx.selector.Selector.DEFAULT_POLICY">
-<code class="sig-name descname">DEFAULT_POLICY</code><em class="property"> = [(&lt;function random_policy&gt;, 0.3), (&lt;function stderr_policy&gt;, 0.35), (&lt;function power_policy&gt;, 0.35)]</em><a class="headerlink" href="#metricx.selector.Selector.DEFAULT_POLICY" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">DEFAULT_POLICY</code><em class="property"> = [(&lt;function random_policy&gt;, 0.25), (&lt;function stderr_policy&gt;, 0.25), (&lt;function power_policy&gt;, 0.25), (&lt;function ucb_policy&gt;, 0.25)]</em><a class="headerlink" href="#metricx.selector.Selector.DEFAULT_POLICY" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -638,6 +658,12 @@ before the randomized policies are applied.</p>
 <dt id="metricx.selector.stderr_policy">
 <code class="sig-prename descclassname">metricx.selector.</code><code class="sig-name descname">stderr_policy</code><span class="sig-paren">(</span><em class="sig-param">task: metricx.task.Task</em>, <em class="sig-param">metric: Union[str</em>, <em class="sig-param">metricx.metric.Metric</em>, <em class="sig-param">None] = None</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/metricx/selector.html#stderr_policy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metricx.selector.stderr_policy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select the model with the largest variance.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="metricx.selector.ucb_policy">
+<code class="sig-prename descclassname">metricx.selector.</code><code class="sig-name descname">ucb_policy</code><span class="sig-paren">(</span><em class="sig-param">task: metricx.task.Task</em>, <em class="sig-param">metric: Union[str</em>, <em class="sig-param">metricx.metric.Metric</em>, <em class="sig-param">None] = None</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/metricx/selector.html#ucb_policy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metricx.selector.ucb_policy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select the model with the largest upper confidence bound.</p>
 </dd></dl>
 
 </div>
@@ -680,6 +706,24 @@ the default metric.</p>
 <dt id="metricx.task.Task.get_metric">
 <code class="sig-name descname">get_metric</code><span class="sig-paren">(</span><em class="sig-param">metric: Union[str, metricx.metric.Metric, None]</em><span class="sig-paren">)</span> &#x2192; metricx.metric.Metric<a class="reference internal" href="_modules/metricx/task.html#Task.get_metric"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metricx.task.Task.get_metric" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="metricx.task.Task.likelihood">
+<code class="sig-name descname">likelihood</code><span class="sig-paren">(</span><em class="sig-param">rank: List[str], metric: Union[str, metricx.metric.Metric, None] = None, N: int = 1000</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/metricx/task.html#Task.likelihood"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metricx.task.Task.likelihood" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimate the likelihood of the given ranking.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rank</strong> – A proposed list of models sorted from best to worst.</p></li>
+<li><p><strong>metric</strong> – The target metric.</p></li>
+<li><p><strong>N</strong> – The number of samples to use for the estimation,</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A probability of the given ranking being the true ranking.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="metricx.task.Task.model_to_mu_var_n">
