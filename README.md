@@ -3,6 +3,7 @@
 [![Build Status](https://github.com/k15z/MetricX/workflows/Build%20Main/badge.svg)](https://github.com/k15z/MetricX/actions)
 [![Documentation](https://github.com/k15z/MetricX/workflows/Documentation/badge.svg)](https://k15z.github.io/MetricX)
 [![Code Coverage](https://codecov.io/gh/k15z/MetricX/branch/main/graph/badge.svg)](https://codecov.io/gh/k15z/MetricX)
+[![PyPI version](https://badge.fury.io/py/metricx.svg)](https://badge.fury.io/py/metricx)
 
 A library for managing, exploring, and analyzing benchmark data. Given a set of tasks
 and a set of models which can be evaluated on the tasks, `MetricX` provides tools 
@@ -64,8 +65,8 @@ task.report("logistic-regression", {
 ```
 
 ### Generate plots and rankings
-The :class:`~metricx.Task` object provides numerous functionality from 
-generating plots to ranking models.
+The `Task` object provides numerous functionality from generating plots 
+to ranking models.
 
 ```python
 task.to_bokeh() # generate a Bokeh plot
@@ -75,8 +76,8 @@ task.rank() # return a ranking of models
 
 ### Combine multiple tasks
 If you have multiple tasks, as is typical in a benchmarking scenario, you 
-can use the :class:`~metricx.TaskGrid` to wrap them together and generated 
-combined visualizations and more.
+can use the `TaskGrid` to wrap them together and generated combined 
+visualizations and more.
 
 ```python
 from metricx import TaskGrid
