@@ -15,16 +15,29 @@ class TestTask(unittest.TestCase):
         )
         task.report("model-1", {"score": 1.0, "fit-time": 1.0})
         task.report("model-2", {"score": 0.0, "fit-time": 0.0})
+
         self.assertEqual(task.rank("score"), ["model-1", "model-2"])
         self.assertEqual(task.rank("fit-time"), ["model-2", "model-1"])
         self.assertEqual(task.best("score"), "model-1")
+
         with self.assertRaises(ValueError):
             task.samples_to_achieve_power("model-1", "model-2")
-
         for _ in range(10):
-            task.report("model-1", {"score": random(), "fit-time": 1.0})
+            task.report("model-1", {"score": 1.0 + random(), "fit-time": 1.0})
             task.report("model-2", {"score": random(), "fit-time": 0.0})
         self.assertTrue(task.samples_to_achieve_power("model-1", "model-2"))
+
+        # With high likelihood, model-2 is worse than model 1 at `score`
+        self.assertLess(
+            task.likelihood(["model-2", "model-1"]),
+            task.likelihood(["model-1", "model-2"]),
+        )
+
+        # With high likelihood, model-2 is better than model 1 at `fit-time`
+        self.assertGreater(
+            task.likelihood(["model-2", "model-1"], "fit-time"),
+            task.likelihood(["model-1", "model-2"], "fit-time"),
+        )
 
     def test_export(self):
         task = Task(

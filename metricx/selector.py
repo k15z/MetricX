@@ -16,9 +16,17 @@ def stderr_policy(task: Task, metric: Optional[Union[str, Metric]] = None) -> st
     """Select the model with the largest variance."""
     mu_var_n = task.model_to_mu_var_n(metric)
     stderr_model = [
-        (np.sqrt(var / n), model) for model, (mu, var, n) in mu_var_n.items()
+        (np.sqrt(var / n), model) for model, (_, var, n) in mu_var_n.items()
     ]
     _, model = list(sorted(stderr_model))[-1]
+    return model
+
+
+def ucb_policy(task: Task, metric: Optional[Union[str, Metric]] = None) -> str:
+    """Select the model with the largest upper confidence bound."""
+    mu_var_n = task.model_to_mu_var_n(metric)
+    ucb_model = [(mu + np.sqrt(var), model) for model, (mu, var, n) in mu_var_n.items()]
+    _, model = list(sorted(ucb_model))[-1]
     return model
 
 
@@ -46,10 +54,11 @@ class Selector:
         1. Obtain `min_samples=3` for each model.
         2. Sample from `policies`:
 
-            - (p=0.3) Sample a random model.
-            - (p=0.35) Select the model with the largest standard errror.
-            - (p=0.35) Select the model with the largest number of samples
+            - (p=0.25) Sample a random model.
+            - (p=0.25) Select the model with the largest standard errror.
+            - (p=0.25) Select the model with the largest number of samples
               needed to achieve power.
+            - (p=0.25) Select the model with the largest upper confidence bound.
 
     Attributes:
         task: The target task.
@@ -60,9 +69,10 @@ class Selector:
     """
 
     DEFAULT_POLICY = [
-        (random_policy, 0.3),
-        (stderr_policy, 0.35),
-        (power_policy, 0.35),
+        (random_policy, 0.25),
+        (stderr_policy, 0.25),
+        (power_policy, 0.25),
+        (ucb_policy, 0.25),
     ]
 
     def __init__(

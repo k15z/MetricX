@@ -100,6 +100,38 @@ class Task:
         _, _, models = zip(*scores)
         return list(models)
 
+    def likelihood(
+        self,
+        rank: List[str],
+        metric: Optional[Union[str, Metric]] = None,
+        N: int = 1000,
+    ):
+        """Estimate the likelihood of the given ranking.
+
+        Args:
+            rank: A proposed list of models sorted from best to worst.
+            metric: The target metric.
+            N: The number of samples to use for the estimation,
+
+        Returns:
+            A probability of the given ranking being the true ranking.
+        """
+        metric = self.get_metric(metric)
+        model_to_mu_var_n = self.model_to_mu_var_n(metric)
+
+        model_to_values = {}
+        for model, (mu, var, _) in model_to_mu_var_n.items():
+            model_to_values[model] = np.random.normal(
+                loc=mu, scale=np.sqrt(var), size=N
+            )
+        is_valid = np.ones(N).astype(bool)
+        for a, b in zip(rank, rank[1:]):
+            if metric.is_higher_better:
+                is_valid &= model_to_values[a] > model_to_values[b]
+            else:
+                is_valid &= model_to_values[a] < model_to_values[b]
+        return np.mean(is_valid)
+
     def best(self, metric: Union[str, Metric]) -> str:
         """Get the best model.
 
