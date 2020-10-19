@@ -96,6 +96,7 @@
 <p class="caption"><span class="caption-text">Tutorials</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/1_Getting_Started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/2_Smart_Selectors.html">Smart Selectors</a></li>
 </ul>
 <p class="caption"><span class="caption-text">References</span></p>
 <ul>
@@ -265,10 +266,10 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            A list of models, sorted from best to worst.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">metric</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_metric</span><span class="p">(</span><span class="n">metric</span><span class="p">)</span>
+        <span class="n">metric</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_metric</span><span class="p">(</span><span class="n">metric</span><span class="p">)</span>
 
         <span class="n">scores</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">model</span><span class="p">,</span> <span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model_to_mu_var_n</span><span class="p">(</span><span class="n">metric</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">model</span><span class="p">,</span> <span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_to_mu_var_n</span><span class="p">(</span><span class="n">metric</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">metric</span><span class="o">.</span><span class="n">is_higher_better</span><span class="p">:</span>
                 <span class="n">mu</span> <span class="o">=</span> <span class="o">-</span><span class="n">mu</span>
             <span class="n">scores</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">mu</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">model</span><span class="p">))</span>
@@ -288,27 +289,16 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rank</span><span class="p">(</span><span class="n">metric</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="Task.propose"><a class="viewcode-back" href="../../metricx.html#metricx.Task.propose">[docs]</a>    <span class="k">def</span> <span class="nf">propose</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metric</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Metric</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Propose a model.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            metric: The target metric to sort by.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            Propose a model identifier.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span></div>
-
-    <span class="k">def</span> <span class="nf">_get_metric</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metric</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Metric</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Metric</span><span class="p">:</span>
+<div class="viewcode-block" id="Task.get_metric"><a class="viewcode-back" href="../../metricx.html#metricx.Task.get_metric">[docs]</a>    <span class="k">def</span> <span class="nf">get_metric</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metric</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Metric</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Metric</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">metric</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_metric</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">metric</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">metric</span>
+        <span class="k">return</span> <span class="n">metric</span></div>
 
-    <span class="k">def</span> <span class="nf">_model_to_mu_var_n</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metric</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Metric</span><span class="p">]]):</span>
+<div class="viewcode-block" id="Task.model_to_mu_var_n"><a class="viewcode-back" href="../../metricx.html#metricx.Task.model_to_mu_var_n">[docs]</a>    <span class="k">def</span> <span class="nf">model_to_mu_var_n</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metric</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Metric</span><span class="p">]]):</span>
         <span class="sd">&quot;&quot;&quot;Compute mean, variance, and count.&quot;&quot;&quot;</span>
-        <span class="n">metric</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_metric</span><span class="p">(</span><span class="n">metric</span><span class="p">)</span>
+        <span class="n">metric</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_metric</span><span class="p">(</span><span class="n">metric</span><span class="p">)</span>
         <span class="n">model_to_mu_var_n</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">model</span><span class="p">,</span> <span class="n">results</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">result</span><span class="p">[</span><span class="n">metric</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="p">])</span>
@@ -316,7 +306,7 @@
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">var</span> <span class="o">=</span> <span class="mf">0.0</span>
             <span class="n">model_to_mu_var_n</span><span class="p">[</span><span class="n">model</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">model_to_mu_var_n</span>
+        <span class="k">return</span> <span class="n">model_to_mu_var_n</span></div>
 
 <div class="viewcode-block" id="Task.to_csv"><a class="viewcode-back" href="../../metricx.html#metricx.Task.to_csv">[docs]</a>    <span class="k">def</span> <span class="nf">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_to_csv</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Export to CSV.</span>

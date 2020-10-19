@@ -98,6 +98,7 @@
 <p class="caption"><span class="caption-text">Tutorials</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="notebooks/1_Getting_Started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/2_Smart_Selectors.html">Smart Selectors</a></li>
 </ul>
 <p class="caption"><span class="caption-text">References</span></p>
 <ul class="current">
@@ -238,17 +239,22 @@
 
 <dl class="class">
 <dt id="metricx.Selector">
-<em class="property">class </em><code class="sig-prename descclassname">metricx.</code><code class="sig-name descname">Selector</code><span class="sig-paren">(</span><em class="sig-param">task: metricx.task.Task</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/metricx/selector.html#Selector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metricx.Selector" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">metricx.</code><code class="sig-name descname">Selector</code><span class="sig-paren">(</span><em class="sig-param">task: metricx.task.Task</em>, <em class="sig-param">policies: List[Tuple[Callable</em>, <em class="sig-param">float]] = []</em>, <em class="sig-param">min_samples: int = 3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/metricx/selector.html#Selector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metricx.Selector" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>This class implements methods for selecting models to run.</p>
 <p>Given a target metric, the Selector class provides methods for selecting
-models to run. Examples of criteria that could be used include:</p>
+models to run. The default policy is to:</p>
 <blockquote>
 <div><ol class="arabic simple">
-<li><p>Choosing the model with the fewest samples.</p></li>
-<li><p>Choosing the model with the highest variance.</p></li>
-<li><p>Choosing the model such that a new sample would produce the greatest
-change in the expected ranking.</p></li>
+<li><p>Obtain <cite>min_samples</cite> for each model.</p></li>
+<li><dl class="simple">
+<dt>Sample from <cite>policies</cite>:</dt><dd><ul class="simple">
+<li><p>Sample a random model 50% of the time.</p></li>
+<li><p>Select the model with the largest stderr 50% of the time.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
 </ol>
 </div></blockquote>
 <dl class="attribute">
@@ -256,6 +262,25 @@ change in the expected ranking.</p></li>
 <code class="sig-name descname">task</code><a class="headerlink" href="#metricx.Selector.task" title="Permalink to this definition">¶</a></dt>
 <dd><p>The target task.</p>
 </dd></dl>
+
+<dl class="attribute">
+<dt id="metricx.Selector.policies">
+<code class="sig-name descname">policies</code><a class="headerlink" href="#metricx.Selector.policies" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of tuples containing a policy and the probability of
+selecting that policy.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metricx.Selector.min_samples">
+<code class="sig-name descname">min_samples</code><a class="headerlink" href="#metricx.Selector.min_samples" title="Permalink to this definition">¶</a></dt>
+<dd><p>The minimum number of samples required for each model
+before the randomized policies are applied.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metricx.Selector.DEFAULT_POLICY">
+<code class="sig-name descname">DEFAULT_POLICY</code><em class="property"> = [(&lt;function random_policy&gt;, 0.5), (&lt;function stderr_policy&gt;, 0.5)]</em><a class="headerlink" href="#metricx.Selector.DEFAULT_POLICY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="metricx.Selector.propose">
@@ -307,17 +332,14 @@ the default metric.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="metricx.Task.propose">
-<code class="sig-name descname">propose</code><span class="sig-paren">(</span><em class="sig-param">metric: Union[str</em>, <em class="sig-param">metricx.metric.Metric</em>, <em class="sig-param">None] = None</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/metricx/task.html#Task.propose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metricx.Task.propose" title="Permalink to this definition">¶</a></dt>
-<dd><p>Propose a model.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>metric</strong> – The target metric to sort by.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Propose a model identifier.</p>
-</dd>
-</dl>
+<dt id="metricx.Task.get_metric">
+<code class="sig-name descname">get_metric</code><span class="sig-paren">(</span><em class="sig-param">metric: Union[str, metricx.metric.Metric, None]</em><span class="sig-paren">)</span> &#x2192; metricx.metric.Metric<a class="reference internal" href="_modules/metricx/task.html#Task.get_metric"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metricx.Task.get_metric" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="metricx.Task.model_to_mu_var_n">
+<code class="sig-name descname">model_to_mu_var_n</code><span class="sig-paren">(</span><em class="sig-param">metric: Union[str, metricx.metric.Metric, None]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/metricx/task.html#Task.model_to_mu_var_n"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metricx.Task.model_to_mu_var_n" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute mean, variance, and count.</p>
 </dd></dl>
 
 <dl class="method">
@@ -502,17 +524,22 @@ the default metric.</p>
 <span id="metricx-selector-module"></span><h2>metricx.selector module<a class="headerlink" href="#module-metricx.selector" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="metricx.selector.Selector">
-<em class="property">class </em><code class="sig-prename descclassname">metricx.selector.</code><code class="sig-name descname">Selector</code><span class="sig-paren">(</span><em class="sig-param">task: metricx.task.Task</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/metricx/selector.html#Selector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metricx.selector.Selector" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">metricx.selector.</code><code class="sig-name descname">Selector</code><span class="sig-paren">(</span><em class="sig-param">task: metricx.task.Task</em>, <em class="sig-param">policies: List[Tuple[Callable</em>, <em class="sig-param">float]] = []</em>, <em class="sig-param">min_samples: int = 3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/metricx/selector.html#Selector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metricx.selector.Selector" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>This class implements methods for selecting models to run.</p>
 <p>Given a target metric, the Selector class provides methods for selecting
-models to run. Examples of criteria that could be used include:</p>
+models to run. The default policy is to:</p>
 <blockquote>
 <div><ol class="arabic simple">
-<li><p>Choosing the model with the fewest samples.</p></li>
-<li><p>Choosing the model with the highest variance.</p></li>
-<li><p>Choosing the model such that a new sample would produce the greatest
-change in the expected ranking.</p></li>
+<li><p>Obtain <cite>min_samples</cite> for each model.</p></li>
+<li><dl class="simple">
+<dt>Sample from <cite>policies</cite>:</dt><dd><ul class="simple">
+<li><p>Sample a random model 50% of the time.</p></li>
+<li><p>Select the model with the largest stderr 50% of the time.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
 </ol>
 </div></blockquote>
 <dl class="attribute">
@@ -520,6 +547,25 @@ change in the expected ranking.</p></li>
 <code class="sig-name descname">task</code><a class="headerlink" href="#metricx.selector.Selector.task" title="Permalink to this definition">¶</a></dt>
 <dd><p>The target task.</p>
 </dd></dl>
+
+<dl class="attribute">
+<dt id="metricx.selector.Selector.policies">
+<code class="sig-name descname">policies</code><a class="headerlink" href="#metricx.selector.Selector.policies" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of tuples containing a policy and the probability of
+selecting that policy.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metricx.selector.Selector.min_samples">
+<code class="sig-name descname">min_samples</code><a class="headerlink" href="#metricx.selector.Selector.min_samples" title="Permalink to this definition">¶</a></dt>
+<dd><p>The minimum number of samples required for each model
+before the randomized policies are applied.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metricx.selector.Selector.DEFAULT_POLICY">
+<code class="sig-name descname">DEFAULT_POLICY</code><em class="property"> = [(&lt;function random_policy&gt;, 0.5), (&lt;function stderr_policy&gt;, 0.5)]</em><a class="headerlink" href="#metricx.selector.Selector.DEFAULT_POLICY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="metricx.selector.Selector.propose">
@@ -536,6 +582,16 @@ change in the expected ranking.</p></li>
 </dd></dl>
 
 </dd></dl>
+
+<dl class="function">
+<dt id="metricx.selector.random_policy">
+<code class="sig-prename descclassname">metricx.selector.</code><code class="sig-name descname">random_policy</code><span class="sig-paren">(</span><em class="sig-param">task: metricx.task.Task</em>, <em class="sig-param">metric: Union[str</em>, <em class="sig-param">metricx.metric.Metric</em>, <em class="sig-param">None] = None</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/metricx/selector.html#random_policy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metricx.selector.random_policy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="metricx.selector.stderr_policy">
+<code class="sig-prename descclassname">metricx.selector.</code><code class="sig-name descname">stderr_policy</code><span class="sig-paren">(</span><em class="sig-param">task: metricx.task.Task</em>, <em class="sig-param">metric: Union[str</em>, <em class="sig-param">metricx.metric.Metric</em>, <em class="sig-param">None] = None</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/metricx/selector.html#stderr_policy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metricx.selector.stderr_policy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 <div class="section" id="module-metricx.task">
@@ -574,17 +630,14 @@ the default metric.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="metricx.task.Task.propose">
-<code class="sig-name descname">propose</code><span class="sig-paren">(</span><em class="sig-param">metric: Union[str</em>, <em class="sig-param">metricx.metric.Metric</em>, <em class="sig-param">None] = None</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/metricx/task.html#Task.propose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metricx.task.Task.propose" title="Permalink to this definition">¶</a></dt>
-<dd><p>Propose a model.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>metric</strong> – The target metric to sort by.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Propose a model identifier.</p>
-</dd>
-</dl>
+<dt id="metricx.task.Task.get_metric">
+<code class="sig-name descname">get_metric</code><span class="sig-paren">(</span><em class="sig-param">metric: Union[str, metricx.metric.Metric, None]</em><span class="sig-paren">)</span> &#x2192; metricx.metric.Metric<a class="reference internal" href="_modules/metricx/task.html#Task.get_metric"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metricx.task.Task.get_metric" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="metricx.task.Task.model_to_mu_var_n">
+<code class="sig-name descname">model_to_mu_var_n</code><span class="sig-paren">(</span><em class="sig-param">metric: Union[str, metricx.metric.Metric, None]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/metricx/task.html#Task.model_to_mu_var_n"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metricx.task.Task.model_to_mu_var_n" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute mean, variance, and count.</p>
 </dd></dl>
 
 <dl class="method">
