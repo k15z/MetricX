@@ -1,0 +1,27 @@
+metricx package
+===============
+
+.. automodule:: metricx
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+metricx.metric module
+---------------------
+
+.. automodule:: metricx.metric
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+metricx.task module
+-------------------
+
+.. automodule:: metricx.task
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
