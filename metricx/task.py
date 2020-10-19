@@ -28,21 +28,39 @@ def _is_unique(s):
 
 
 class Task:
+    """This class represents a task which is used to evaluate models.
+
+    Attributes:
+        name: The name of the task.
+        metrics: A list of Metrics which are produced by models which are
+            executed on the task. The first metric in this list is considered
+            the default metric.
+    """
+
     def __init__(
         self,
         name: str,
         metrics: List[Metric],
     ):
         self.name = name
-        self.primary_metric = metrics[0]
         self.metrics: Dict[str, Metric] = {}
         self.results: Dict[str, List[Dict[str, float]]] = {}
 
         for metric in metrics:
             assert metric.name not in self.metrics
             self.metrics[metric.name] = metric
+        self.default_metric = metrics[0]
 
     def report(self, model: str, result: Dict[Union[str, Metric], float]):
+        """Report a result for the specified model.
+
+        Args:
+            model: A string identifying the model.
+            result: A dictionary mapping each metric to its value.
+
+        Raises:
+            KeyError: If the result dictionary is missing metrics.
+        """
         if model not in self.results:
             self.results[model] = []
 
@@ -55,7 +73,14 @@ class Task:
         self.results[model].append(result_)
 
     def rank(self, metric: Optional[Union[str, Metric]] = None) -> List[str]:
-        """Return a list of models from best to worst."""
+        """Rank the models.
+
+        Args:
+            metric: The target metric to sort by.
+
+        Returns:
+            A list of models, sorted from best to worst.
+        """
         metric = self._get_metric(metric)
 
         scores = []
@@ -69,16 +94,30 @@ class Task:
         return list(models)
 
     def best(self, metric: Union[str, Metric]) -> str:
-        """Return the best model."""
+        """Get the best model.
+
+        Args:
+            metric: The target metric to sort by.
+
+        Returns:
+            The best model on this task.
+        """
         return self.rank(metric)[0]
 
     def propose(self, metric: Optional[Union[str, Metric]] = None) -> str:
-        """Propose a model to evaluate on this task."""
+        """Propose a model.
+
+        Args:
+            metric: The target metric to sort by.
+
+        Returns:
+            Propose a model identifier.
+        """
         return np.random.choice(list(self.results.keys()))
 
     def _get_metric(self, metric: Optional[Union[str, Metric]]) -> Metric:
         if metric is None:
-            return self.primary_metric
+            return self.default_metric
         elif isinstance(metric, str):
             return self.metrics[metric]
         return metric
@@ -96,9 +135,19 @@ class Task:
         return model_to_mu_var_n
 
     def to_csv(self, path_to_csv):
+        """Export to CSV.
+
+        Args:
+            path_to_csv: The path to write the csv.
+        """
         self.to_df.to_csv(path_to_csv, index=False)
 
     def to_df(self) -> pd.DataFrame:
+        """Export to DataFrame.
+
+        Returns:
+            A DataFrame where each row corresponds to a single run.
+        """
         rows = []
         for model, results in self.results.items():
             for result in results:
@@ -109,6 +158,11 @@ class Task:
         return pd.DataFrame(rows)
 
     def to_figure(self) -> plt.Figure:
+        """Export to Figure.
+
+        Returns:
+            A Figure where each subplot shows a metric.
+        """
         fig, axs = plt.subplots(len(self.metrics), figsize=(10, 2 * len(self.metrics)))
         if not isinstance(axs, np.ndarray):
             axs = [axs]  # type: ignore

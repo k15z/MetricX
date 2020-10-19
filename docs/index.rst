@@ -3,7 +3,6 @@
 .. toctree::
    :hidden:
    :maxdepth: 1
-   :caption: Contents:
 
    Overview <self>
    installation

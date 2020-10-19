@@ -1,8 +1,8 @@
 # MetricX
 
-[![Build Status](https://github.com/k15z/metricx/workflows/Build%20Master/badge.svg)](https://github.com/k15z/metricx/actions)
+[![Build Status](https://github.com/k15z/metricx/workflows/Build%20Main/badge.svg)](https://github.com/k15z/metricx/actions)
 [![Documentation](https://github.com/k15z/metricx/workflows/Documentation/badge.svg)](https://k15z.github.io/metricx)
-[![Code Coverage](https://codecov.io/gh/k15z/metricx/branch/master/graph/badge.svg)](https://codecov.io/gh/k15z/metricx)
+[![Code Coverage](https://codecov.io/gh/k15z/metricx/branch/main/graph/badge.svg)](https://codecov.io/gh/k15z/metricx)
 
 A library for managing, exploring, and analyzing benchmark data.
 

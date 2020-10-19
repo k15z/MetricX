@@ -1,4 +1,12 @@
 class Metric:
+    """This class represents an objective to be optimized.
+
+    Attributes:
+        name: The name of the metric.
+        description: A human-readible description of the metric.
+        is_higher_better: Whether larger values are better.
+    """
+
     def __init__(
         self,
         name: str,
