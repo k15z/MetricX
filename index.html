@@ -213,9 +213,14 @@
 <a class="reference external image-reference" href="https://codecov.io/gh/k15z/MetricX"><img alt="Code Coverage" src="https://codecov.io/gh/k15z/MetricX/branch/main/graph/badge.svg" /></a>
 <a class="reference external image-reference" href="https://badge.fury.io/py/metricx"><img alt="PyPI version" src="https://badge.fury.io/py/metricx.svg" /></a>
 <p>A library for managing, exploring, and analyzing benchmark data. Given a set of tasks
-and a set of models which can be evaluated on the tasks, <code class="docutils literal notranslate"><span class="pre">MetricX</span></code> provides tools
-for keeping track of results, exporting the benchmark results, and generating
-interactive visualizations of the data.</p>
+and a set of models which can be evaluated on the tasks, <code class="docutils literal notranslate"><span class="pre">MetricX</span></code> provides a suite
+of features including:</p>
+<ul class="simple">
+<li><p>Monitoring and logging of modeling results.</p></li>
+<li><p>Export to CSV, matplotlib, bokeh, and more!</p></li>
+<li><p>Smart selection of the next model to evaluate.</p></li>
+<li><p>Interactive HTML reports (deployable via Github Pages).</p></li>
+</ul>
 <hr class="docutils" />
 <div class="section" id="quick-start">
 <h2>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h2>
@@ -283,13 +288,13 @@ to ranking models.</p>
 can use the <code class="docutils literal notranslate"><span class="pre">TaskGrid</span></code> to wrap them together and generated combined
 visualizations and more.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">metricx</span> <span class="kn">import</span> <span class="n">TaskGrid</span>
-<span class="kn">from</span> <span class="nn">bokeh.io</span> <span class="kn">import</span> <span class="n">output_notebook</span><span class="p">,</span> <span class="n">show</span>
 
-<span class="n">output_notebook</span><span class="p">()</span>
 <span class="n">grid</span> <span class="o">=</span> <span class="n">TaskGrid</span><span class="p">([</span><span class="n">task</span><span class="p">])</span>
-<span class="n">show</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">to_bokeh</span><span class="p">())</span>
+<span class="n">grid</span><span class="o">.</span><span class="n">to_html</span><span class="p">(</span><span class="s2">&quot;benchmark.html&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>This will create a standalone HTML file which allows you to interactively
+explore the benchmark results.</p>
 <div class="toctree-wrapper compound">
 </div>
 <div class="toctree-wrapper compound">

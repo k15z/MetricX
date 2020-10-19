@@ -184,8 +184,10 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">bokeh.embed</span> <span class="kn">import</span> <span class="n">file_html</span>  <span class="c1"># type: ignore</span>
 <span class="kn">from</span> <span class="nn">bokeh.models</span> <span class="kn">import</span> <span class="n">Panel</span><span class="p">,</span> <span class="n">Tabs</span>  <span class="c1"># type: ignore</span>
 <span class="kn">from</span> <span class="nn">bokeh.plotting</span> <span class="kn">import</span> <span class="n">figure</span>  <span class="c1"># type: ignore</span>
+<span class="kn">from</span> <span class="nn">bokeh.resources</span> <span class="kn">import</span> <span class="n">CDN</span>  <span class="c1"># type: ignore</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">cm</span>
 
 <span class="kn">from</span> <span class="nn">.task</span> <span class="kn">import</span> <span class="n">Task</span>
@@ -211,6 +213,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">tasks</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">task</span> <span class="ow">in</span> <span class="n">tasks</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">tasks</span><span class="p">[</span><span class="n">task</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">task</span>
+
+<div class="viewcode-block" id="TaskGrid.to_html"><a class="viewcode-back" href="../../metricx.html#metricx.TaskGrid.to_html">[docs]</a>    <span class="k">def</span> <span class="nf">to_html</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_to_html</span><span class="p">):</span>
+        <span class="n">html</span> <span class="o">=</span> <span class="n">file_html</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_bokeh</span><span class="p">(),</span> <span class="n">CDN</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path_to_html</span><span class="p">,</span> <span class="s2">&quot;wt&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
+            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">html</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TaskGrid.to_bokeh"><a class="viewcode-back" href="../../metricx.html#metricx.TaskGrid.to_bokeh">[docs]</a>    <span class="k">def</span> <span class="nf">to_bokeh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">tabs</span> <span class="o">=</span> <span class="p">[]</span>
