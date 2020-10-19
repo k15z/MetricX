@@ -17,6 +17,14 @@ metricx.metric module
    :undoc-members:
    :show-inheritance:
 
+metricx.selector module
+-----------------------
+
+.. automodule:: metricx.selector
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 metricx.task module
 -------------------
 
