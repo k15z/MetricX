@@ -179,13 +179,6 @@
   </ul>
 
   
-  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
-      
-      
-        <a href="metricx.html" class="btn btn-neutral float-left" title="metricx package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
-  </div>
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -264,9 +257,9 @@ git push origin <span class="o">{</span>your_development_type<span class="o">}</
 <p>A reminder for the maintainers on how to deploy.
 Make sure all your changes are committed.
 Then run:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ bumpversion patch <span class="c1"># possible: major / minor / patch</span>
-$ git push
-$ git push --tags
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bumpversion patch <span class="c1"># possible: major / minor / patch</span>
+git push
+git push --tags
 git branch -D stable
 git checkout -b stable
 git push --set-upstream origin stable -f
