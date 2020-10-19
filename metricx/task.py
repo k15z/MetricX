@@ -1,3 +1,4 @@
+from datetime import datetime
 from itertools import cycle
 from typing import Any, Dict, List, Optional, Union
 
@@ -8,6 +9,7 @@ from bokeh.layouts import column  # type: ignore
 from bokeh.models import Range1d  # type: ignore
 from bokeh.plotting import figure  # type: ignore
 from scipy.stats import norm  # type: ignore
+from statsmodels.stats.power import tt_ind_solve_power  # type: ignore
 
 from metricx.metric import Metric
 
@@ -67,7 +69,8 @@ class Task:
         if model not in self.results:
             self.results[model] = []
 
-        result_: Dict[str, float] = {}
+        result_: Dict[str, Any] = {}
+        result_["timestamp"] = datetime.now()
         for metric in self.metrics.values():
             if metric in result:
                 result_[metric.name] = result[metric]
@@ -106,6 +109,32 @@ class Task:
             The best model on this task.
         """
         return self.rank(metric)[0]
+
+    def samples_to_achieve_power(
+        self, modelA: str, modelB: str, metric: Optional[Union[str, Metric]] = None
+    ):
+        """Number of samples needed to achieve power.
+
+        This method estimates the number of samples needed - for each
+        model - to achieve 50% statistical power. This corresponds to the
+        probability of detecting a statistically significant effect
+        (p-value=0.1) if there is one.
+        """
+        model_to_mu_var_n = self.model_to_mu_var_n(metric)
+        muA, varA, nA = model_to_mu_var_n[modelA]
+        muB, varB, nB = model_to_mu_var_n[modelB]
+        if nA < 3 or nB < 3:
+            raise ValueError("Not enough samples to estimate the power.")
+
+        pct_change = abs(0.1 * (muA + muB) / 2.0)
+        std_dev = np.sqrt(varA + varB)
+        effect_size = pct_change / std_dev
+
+        nA_needed = tt_ind_solve_power(
+            effect_size=effect_size, nobs1=None, alpha=0.1, power=0.5, ratio=nB / nA
+        )
+        nB_needed = nA_needed * nB / nA
+        return max(0, nA_needed - nA), max(0, nB_needed - nB)
 
     def get_metric(self, metric: Optional[Union[str, Metric]]) -> Metric:
         if metric is None:
@@ -182,6 +211,7 @@ class Task:
         return fig
 
     def to_bokeh(self):
+        """Export to bokeh Figure."""
         figures = []
 
         df = self.to_df()

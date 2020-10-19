@@ -12,6 +12,7 @@ of features including:
  - Monitoring and logging of modeling results.
  - Export to CSV, matplotlib, bokeh, and more!
  - Smart selection of the next model to evaluate.
+ - Interactive visualization in Jupyter notebooks.
  - Interactive HTML reports (deployable via Github Pages).
 
 ---

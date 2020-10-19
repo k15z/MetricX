@@ -33,11 +33,17 @@ class TaskGrid:
             self.tasks[task.name] = task
 
     def to_html(self, path_to_html):
+        """Export to html file.
+
+        Args:
+            path_to_html: The path to write the HTML.
+        """
         html = file_html(self.to_bokeh(), CDN)
         with open(path_to_html, "wt") as fout:
             fout.write(html)
 
     def to_bokeh(self):
+        """Export to bokeh Figure."""
         tabs = []
         tabs.append(Panel(child=self._bokeh_overview(), title="overview"))
         for task in self.tasks.values():

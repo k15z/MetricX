@@ -44,6 +44,7 @@ requirements = [
     "numpy>=1.19.0",
     "pandas>=1.1.0",
     "scipy>=1.2.0",
+    "statsmodels>=0.12.0",
 ]
 
 extra_requirements = {
