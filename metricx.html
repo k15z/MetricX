@@ -245,15 +245,17 @@
 <p>Given a target metric, the Selector class provides methods for selecting
 models to run. The default policy is to:</p>
 <blockquote>
-<div><ol class="arabic simple">
-<li><p>Obtain <cite>min_samples</cite> for each model.</p></li>
-<li><dl class="simple">
-<dt>Sample from <cite>policies</cite>:</dt><dd><ul class="simple">
-<li><p>Sample a random model 50% of the time.</p></li>
-<li><p>Select the model with the largest stderr 50% of the time.</p></li>
+<div><ol class="arabic">
+<li><p>Obtain <cite>min_samples=3</cite> for each model.</p></li>
+<li><p>Sample from <cite>policies</cite>:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>(p=0.3) Sample a random model.</p></li>
+<li><p>(p=0.35) Select the model with the largest standard errror.</p></li>
+<li><p>(p=0.35) Select the model with the largest number of samples
+needed to achieve power.</p></li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 </li>
 </ol>
 </div></blockquote>
@@ -279,7 +281,7 @@ before the randomized policies are applied.</p>
 
 <dl class="attribute">
 <dt id="metricx.Selector.DEFAULT_POLICY">
-<code class="sig-name descname">DEFAULT_POLICY</code><em class="property"> = [(&lt;function random_policy&gt;, 0.5), (&lt;function stderr_policy&gt;, 0.5)]</em><a class="headerlink" href="#metricx.Selector.DEFAULT_POLICY" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">DEFAULT_POLICY</code><em class="property"> = [(&lt;function random_policy&gt;, 0.3), (&lt;function stderr_policy&gt;, 0.35), (&lt;function power_policy&gt;, 0.35)]</em><a class="headerlink" href="#metricx.Selector.DEFAULT_POLICY" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -374,9 +376,20 @@ the default metric.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="metricx.Task.samples_to_achieve_power">
+<code class="sig-name descname">samples_to_achieve_power</code><span class="sig-paren">(</span><em class="sig-param">modelA: str</em>, <em class="sig-param">modelB: str</em>, <em class="sig-param">metric: Union[str</em>, <em class="sig-param">metricx.metric.Metric</em>, <em class="sig-param">None] = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/metricx/task.html#Task.samples_to_achieve_power"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metricx.Task.samples_to_achieve_power" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of samples needed to achieve power.</p>
+<p>This method estimates the number of samples needed - for each
+model - to achieve 50% statistical power. This corresponds to the
+probability of detecting a statistically significant effect
+(p-value=0.1) if there is one.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="metricx.Task.to_bokeh">
 <code class="sig-name descname">to_bokeh</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/metricx/task.html#Task.to_bokeh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metricx.Task.to_bokeh" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Export to bokeh Figure.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="metricx.Task.to_csv">
@@ -427,7 +440,8 @@ the default metric.</p>
 <dl class="method">
 <dt id="metricx.TaskGrid.to_bokeh">
 <code class="sig-name descname">to_bokeh</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/metricx/grid.html#TaskGrid.to_bokeh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metricx.TaskGrid.to_bokeh" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Export to bokeh Figure.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="metricx.TaskGrid.to_csv">
@@ -448,7 +462,13 @@ the default metric.</p>
 <dl class="method">
 <dt id="metricx.TaskGrid.to_html">
 <code class="sig-name descname">to_html</code><span class="sig-paren">(</span><em class="sig-param">path_to_html</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/metricx/grid.html#TaskGrid.to_html"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metricx.TaskGrid.to_html" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Export to html file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path_to_html</strong> – The path to write the HTML.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -471,7 +491,8 @@ the default metric.</p>
 <dl class="method">
 <dt id="metricx.grid.TaskGrid.to_bokeh">
 <code class="sig-name descname">to_bokeh</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/metricx/grid.html#TaskGrid.to_bokeh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metricx.grid.TaskGrid.to_bokeh" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Export to bokeh Figure.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="metricx.grid.TaskGrid.to_csv">
@@ -492,7 +513,13 @@ the default metric.</p>
 <dl class="method">
 <dt id="metricx.grid.TaskGrid.to_html">
 <code class="sig-name descname">to_html</code><span class="sig-paren">(</span><em class="sig-param">path_to_html</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/metricx/grid.html#TaskGrid.to_html"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metricx.grid.TaskGrid.to_html" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Export to html file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path_to_html</strong> – The path to write the HTML.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -540,15 +567,17 @@ the default metric.</p>
 <p>Given a target metric, the Selector class provides methods for selecting
 models to run. The default policy is to:</p>
 <blockquote>
-<div><ol class="arabic simple">
-<li><p>Obtain <cite>min_samples</cite> for each model.</p></li>
-<li><dl class="simple">
-<dt>Sample from <cite>policies</cite>:</dt><dd><ul class="simple">
-<li><p>Sample a random model 50% of the time.</p></li>
-<li><p>Select the model with the largest stderr 50% of the time.</p></li>
+<div><ol class="arabic">
+<li><p>Obtain <cite>min_samples=3</cite> for each model.</p></li>
+<li><p>Sample from <cite>policies</cite>:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>(p=0.3) Sample a random model.</p></li>
+<li><p>(p=0.35) Select the model with the largest standard errror.</p></li>
+<li><p>(p=0.35) Select the model with the largest number of samples
+needed to achieve power.</p></li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 </li>
 </ol>
 </div></blockquote>
@@ -574,7 +603,7 @@ before the randomized policies are applied.</p>
 
 <dl class="attribute">
 <dt id="metricx.selector.Selector.DEFAULT_POLICY">
-<code class="sig-name descname">DEFAULT_POLICY</code><em class="property"> = [(&lt;function random_policy&gt;, 0.5), (&lt;function stderr_policy&gt;, 0.5)]</em><a class="headerlink" href="#metricx.selector.Selector.DEFAULT_POLICY" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">DEFAULT_POLICY</code><em class="property"> = [(&lt;function random_policy&gt;, 0.3), (&lt;function stderr_policy&gt;, 0.35), (&lt;function power_policy&gt;, 0.35)]</em><a class="headerlink" href="#metricx.selector.Selector.DEFAULT_POLICY" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -594,14 +623,22 @@ before the randomized policies are applied.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="metricx.selector.power_policy">
+<code class="sig-prename descclassname">metricx.selector.</code><code class="sig-name descname">power_policy</code><span class="sig-paren">(</span><em class="sig-param">task: metricx.task.Task</em>, <em class="sig-param">metric: Union[str</em>, <em class="sig-param">metricx.metric.Metric</em>, <em class="sig-param">None] = None</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/metricx/selector.html#power_policy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metricx.selector.power_policy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select the model with the most samples needed to achieve power.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="metricx.selector.random_policy">
 <code class="sig-prename descclassname">metricx.selector.</code><code class="sig-name descname">random_policy</code><span class="sig-paren">(</span><em class="sig-param">task: metricx.task.Task</em>, <em class="sig-param">metric: Union[str</em>, <em class="sig-param">metricx.metric.Metric</em>, <em class="sig-param">None] = None</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/metricx/selector.html#random_policy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metricx.selector.random_policy" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Select a random model.</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="metricx.selector.stderr_policy">
 <code class="sig-prename descclassname">metricx.selector.</code><code class="sig-name descname">stderr_policy</code><span class="sig-paren">(</span><em class="sig-param">task: metricx.task.Task</em>, <em class="sig-param">metric: Union[str</em>, <em class="sig-param">metricx.metric.Metric</em>, <em class="sig-param">None] = None</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/metricx/selector.html#stderr_policy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metricx.selector.stderr_policy" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Select the model with the largest variance.</p>
+</dd></dl>
 
 </div>
 <div class="section" id="module-metricx.task">
@@ -682,9 +719,20 @@ the default metric.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="metricx.task.Task.samples_to_achieve_power">
+<code class="sig-name descname">samples_to_achieve_power</code><span class="sig-paren">(</span><em class="sig-param">modelA: str</em>, <em class="sig-param">modelB: str</em>, <em class="sig-param">metric: Union[str</em>, <em class="sig-param">metricx.metric.Metric</em>, <em class="sig-param">None] = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/metricx/task.html#Task.samples_to_achieve_power"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metricx.task.Task.samples_to_achieve_power" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of samples needed to achieve power.</p>
+<p>This method estimates the number of samples needed - for each
+model - to achieve 50% statistical power. This corresponds to the
+probability of detecting a statistically significant effect
+(p-value=0.1) if there is one.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="metricx.task.Task.to_bokeh">
 <code class="sig-name descname">to_bokeh</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/metricx/task.html#Task.to_bokeh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metricx.task.Task.to_bokeh" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Export to bokeh Figure.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="metricx.task.Task.to_csv">

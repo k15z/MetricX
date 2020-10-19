@@ -180,7 +180,8 @@
            <div itemprop="articleBody">
             
   <h1>Source code for metricx.selector</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -189,15 +190,32 @@
 
 
 <div class="viewcode-block" id="random_policy"><a class="viewcode-back" href="../../metricx.html#metricx.random_policy">[docs]</a><span class="k">def</span> <span class="nf">random_policy</span><span class="p">(</span><span class="n">task</span><span class="p">:</span> <span class="n">Task</span><span class="p">,</span> <span class="n">metric</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Metric</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Select a random model.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">task</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span></div>
 
 
 <div class="viewcode-block" id="stderr_policy"><a class="viewcode-back" href="../../metricx.html#metricx.stderr_policy">[docs]</a><span class="k">def</span> <span class="nf">stderr_policy</span><span class="p">(</span><span class="n">task</span><span class="p">:</span> <span class="n">Task</span><span class="p">,</span> <span class="n">metric</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Metric</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Select the model with the largest variance.&quot;&quot;&quot;</span>
     <span class="n">mu_var_n</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">model_to_mu_var_n</span><span class="p">(</span><span class="n">metric</span><span class="p">)</span>
     <span class="n">stderr_model</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">var</span> <span class="o">/</span> <span class="n">n</span><span class="p">),</span> <span class="n">model</span><span class="p">)</span> <span class="k">for</span> <span class="n">model</span><span class="p">,</span> <span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="ow">in</span> <span class="n">mu_var_n</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
     <span class="p">]</span>
     <span class="n">_</span><span class="p">,</span> <span class="n">model</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">stderr_model</span><span class="p">))[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">model</span></div>
+
+
+<div class="viewcode-block" id="power_policy"><a class="viewcode-back" href="../../metricx.html#metricx.power_policy">[docs]</a><span class="k">def</span> <span class="nf">power_policy</span><span class="p">(</span><span class="n">task</span><span class="p">:</span> <span class="n">Task</span><span class="p">,</span> <span class="n">metric</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Metric</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Select the model with the most samples needed to achieve power.&quot;&quot;&quot;</span>
+    <span class="n">model_to_samples</span><span class="p">:</span> <span class="n">Counter</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">modelA</span> <span class="ow">in</span> <span class="n">task</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">model_to_samples</span><span class="p">[</span><span class="n">modelA</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">modelB</span> <span class="ow">in</span> <span class="n">task</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">modelA</span> <span class="o">==</span> <span class="n">modelB</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">nA</span><span class="p">,</span> <span class="n">nB</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">samples_to_achieve_power</span><span class="p">(</span><span class="n">modelA</span><span class="p">,</span> <span class="n">modelB</span><span class="p">,</span> <span class="n">metric</span><span class="p">)</span>
+            <span class="n">model_to_samples</span><span class="p">[</span><span class="n">modelA</span><span class="p">]</span> <span class="o">+=</span> <span class="n">nA</span>
+            <span class="n">model_to_samples</span><span class="p">[</span><span class="n">modelB</span><span class="p">]</span> <span class="o">+=</span> <span class="n">nB</span>
+    <span class="n">model</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">model_to_samples</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">model</span></div>
 
 
@@ -207,10 +225,13 @@
 <span class="sd">    Given a target metric, the Selector class provides methods for selecting</span>
 <span class="sd">    models to run. The default policy is to:</span>
 
-<span class="sd">        1. Obtain `min_samples` for each model.</span>
+<span class="sd">        1. Obtain `min_samples=3` for each model.</span>
 <span class="sd">        2. Sample from `policies`:</span>
-<span class="sd">            - Sample a random model 50% of the time.</span>
-<span class="sd">            - Select the model with the largest stderr 50% of the time.</span>
+
+<span class="sd">            - (p=0.3) Sample a random model.</span>
+<span class="sd">            - (p=0.35) Select the model with the largest standard errror.</span>
+<span class="sd">            - (p=0.35) Select the model with the largest number of samples</span>
+<span class="sd">              needed to achieve power.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        task: The target task.</span>
@@ -221,8 +242,9 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">DEFAULT_POLICY</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="p">(</span><span class="n">random_policy</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">stderr_policy</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">random_policy</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">stderr_policy</span><span class="p">,</span> <span class="mf">0.35</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">power_policy</span><span class="p">,</span> <span class="mf">0.35</span><span class="p">),</span>
     <span class="p">]</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
