@@ -42,6 +42,7 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.mathjax",
     "m2r",
+    "nbsphinx",
 ]
 
 # Control napoleon
@@ -97,6 +98,8 @@ pygments_style = "sphinx"
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = False
 
+# Jupyter Notebooks
+nbsphinx_execute = 'never'
 
 # -- Options for HTML output -------------------------------------------
 

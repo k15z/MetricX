@@ -4,6 +4,9 @@ from typing import Any, Dict, List, Optional, Union
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from bokeh.layouts import column
+from bokeh.models import Range1d
+from bokeh.plotting import figure
 from scipy.stats import norm  # type: ignore
 
 from metricx.metric import Metric
@@ -180,7 +183,6 @@ class Task:
                         mu, 0.0, 1.0, label=f"{model}", color=next(colors)
                     )
                 else:
-                    sigma = 1e-5
                     sigma = grp[metric.name].std()
                     x = np.linspace(xmin, xmax, 1000)
                     y = norm.pdf(x, loc=mu, scale=sigma)
@@ -189,3 +191,42 @@ class Task:
         axs[0].set_title(self.name)
         axs[0].legend()
         return fig
+
+    def to_bokeh(self):
+        figures = []
+
+        df = self.to_df()
+        for i, metric in enumerate(self.metrics.values()):
+            fig = figure(
+                plot_width=740,
+                plot_height=200,
+                title=metric.name,
+                toolbar_location=None,
+            )
+
+            colors = cycle(_colors)
+            ymax = 0.0
+            xmin = df[metric.name].min() - df[metric.name].std() * 3
+            xmax = df[metric.name].max() + df[metric.name].std() * 3
+            for model, grp in df.groupby("model"):
+                mu = grp[metric.name].mean()
+                if _is_unique(grp[metric.name]):
+                    sigma = grp[metric.name].std()
+                    x = [mu, mu]
+                    y = [0, 100.0]
+                    fig.line(x, y, line_color=next(colors), legend_label=model)
+
+                else:
+                    sigma = grp[metric.name].std()
+                    x = np.linspace(xmin, xmax, 1000)
+                    y = norm.pdf(x, loc=mu, scale=sigma)
+                    fig.line(x, y, line_color=next(colors), legend_label=model)
+                    ymax = max(ymax, np.max(y))
+
+            fig.x_range = Range1d(xmin, xmax)
+            fig.y_range = Range1d(0.0, ymax * 1.1)
+            figures.append(fig)
+
+            fig.legend.visible = i == 0
+
+        return column(*figures)

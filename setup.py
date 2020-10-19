@@ -29,6 +29,7 @@ dev_requirements = [
     "coverage>=5.1",
     "ipython>=7.15.0",
     "m2r>=0.2.1",
+    "nbsphinx>=0.6.1",
     "pytest-runner>=5.2",
     "Sphinx>=2.0.0b1,<3",
     "sphinx_rtd_theme>=0.4.3",
@@ -38,6 +39,7 @@ dev_requirements = [
 ]
 
 requirements = [
+    "bokeh>=1.4.0",
     "matplotlib>=3.1.0",
     "numpy>=1.19.0",
     "pandas>=1.1.0",

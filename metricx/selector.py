@@ -32,4 +32,7 @@ class Selector:
         Returns:
             The model to execute.
         """
+        for model, results in self.task.results.items():
+            if len(results) < 3:
+                return model
         return choice(list(self.task.results.keys()))

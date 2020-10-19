@@ -9,6 +9,14 @@
    example
 
 .. toctree::
+   :glob:
+   :hidden:
+   :maxdepth: 1
+   :caption: Tutorials
+
+   notebooks/*
+
+.. toctree::
    :hidden:
    :maxdepth: 1
    :caption: References

@@ -64,7 +64,9 @@ test-all:  ## run tests using tox
 docs:  ## generate docs
 	rm -f docs/metricx*.rst
 	rm -f docs/modules.rst
+	rm -rf docs/notebooks
 	sphinx-apidoc -M -o docs/ metricx
+	cp -r notebooks docs/notebooks
 	$(MAKE) -C docs html
 
 view-docs:  ## generate docs and open in browser
