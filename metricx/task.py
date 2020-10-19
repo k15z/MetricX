@@ -84,10 +84,10 @@ class Task:
         Returns:
             A list of models, sorted from best to worst.
         """
-        metric = self._get_metric(metric)
+        metric = self.get_metric(metric)
 
         scores = []
-        for model, (mu, var, _) in self._model_to_mu_var_n(metric).items():
+        for model, (mu, var, _) in self.model_to_mu_var_n(metric).items():
             if metric.is_higher_better:
                 mu = -mu
             scores.append((mu, var, model))
@@ -107,27 +107,16 @@ class Task:
         """
         return self.rank(metric)[0]
 
-    def propose(self, metric: Optional[Union[str, Metric]] = None) -> str:
-        """Propose a model.
-
-        Args:
-            metric: The target metric to sort by.
-
-        Returns:
-            Propose a model identifier.
-        """
-        return np.random.choice(list(self.results.keys()))
-
-    def _get_metric(self, metric: Optional[Union[str, Metric]]) -> Metric:
+    def get_metric(self, metric: Optional[Union[str, Metric]]) -> Metric:
         if metric is None:
             return self.default_metric
         elif isinstance(metric, str):
             return self.metrics[metric]
         return metric
 
-    def _model_to_mu_var_n(self, metric: Optional[Union[str, Metric]]):
+    def model_to_mu_var_n(self, metric: Optional[Union[str, Metric]]):
         """Compute mean, variance, and count."""
-        metric = self._get_metric(metric)
+        metric = self.get_metric(metric)
         model_to_mu_var_n = {}
         for model, results in self.results.items():
             values = np.array([result[metric.name] for result in results])
