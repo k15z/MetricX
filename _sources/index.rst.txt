@@ -6,7 +6,6 @@
 
    Overview <self>
    installation
-   example
 
 .. toctree::
    :glob:
