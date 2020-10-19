@@ -30,7 +30,9 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
         <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -96,11 +98,16 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="example.html">Example</a></li>
 </ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/1_Getting_Started.html">Getting Started</a></li>
+</ul>
 <p class="caption"><span class="caption-text">References</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">API Reference</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">metricx package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-metricx.grid">metricx.grid module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-metricx.metric">metricx.metric module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-metricx.selector">metricx.selector module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-metricx.task">metricx.task module</a></li>
@@ -189,7 +196,31 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-metricx">
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="module-metricx">
 <span id="metricx-package"></span><h1>metricx package<a class="headerlink" href="#module-metricx" title="Permalink to this headline">¶</a></h1>
 <p>Top-level package for MetricX.</p>
 <dl class="class">
@@ -333,6 +364,11 @@ the default metric.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="metricx.Task.to_bokeh">
+<code class="sig-name descname">to_bokeh</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/metricx/task.html#Task.to_bokeh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metricx.Task.to_bokeh" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="metricx.Task.to_csv">
 <code class="sig-name descname">to_csv</code><span class="sig-paren">(</span><em class="sig-param">path_to_csv</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/metricx/task.html#Task.to_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metricx.Task.to_csv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export to CSV.</p>
@@ -367,8 +403,47 @@ the default metric.</p>
 
 </dd></dl>
 
+<dl class="class">
+<dt id="metricx.TaskGrid">
+<em class="property">class </em><code class="sig-prename descclassname">metricx.</code><code class="sig-name descname">TaskGrid</code><span class="sig-paren">(</span><em class="sig-param">tasks: List[metricx.task.Task]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/metricx/grid.html#TaskGrid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metricx.TaskGrid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class represents a set of tasks.</p>
+<dl class="attribute">
+<dt id="metricx.TaskGrid.tasks">
+<code class="sig-name descname">tasks</code><a class="headerlink" href="#metricx.TaskGrid.tasks" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of benchmark tasks.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="metricx.TaskGrid.visualize">
+<code class="sig-name descname">visualize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/metricx/grid.html#TaskGrid.visualize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metricx.TaskGrid.visualize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-metricx.grid">
+<span id="metricx-grid-module"></span><h2>metricx.grid module<a class="headerlink" href="#module-metricx.grid" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="metricx.grid.TaskGrid">
+<em class="property">class </em><code class="sig-prename descclassname">metricx.grid.</code><code class="sig-name descname">TaskGrid</code><span class="sig-paren">(</span><em class="sig-param">tasks: List[metricx.task.Task]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/metricx/grid.html#TaskGrid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metricx.grid.TaskGrid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class represents a set of tasks.</p>
+<dl class="attribute">
+<dt id="metricx.grid.TaskGrid.tasks">
+<code class="sig-name descname">tasks</code><a class="headerlink" href="#metricx.grid.TaskGrid.tasks" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of benchmark tasks.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="metricx.grid.TaskGrid.visualize">
+<code class="sig-name descname">visualize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/metricx/grid.html#TaskGrid.visualize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metricx.grid.TaskGrid.visualize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="module-metricx.metric">
 <span id="metricx-metric-module"></span><h2>metricx.metric module<a class="headerlink" href="#module-metricx.metric" title="Permalink to this headline">¶</a></h2>
@@ -517,6 +592,11 @@ the default metric.</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="method">
+<dt id="metricx.task.Task.to_bokeh">
+<code class="sig-name descname">to_bokeh</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/metricx/task.html#Task.to_bokeh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#metricx.task.Task.to_bokeh" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="metricx.task.Task.to_csv">

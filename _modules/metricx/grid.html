@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>metricx.selector &mdash; MetricX 0.0.0 documentation</title>
+  <title>metricx.grid &mdash; MetricX 0.0.0 documentation</title>
   
 
   
@@ -166,7 +166,7 @@
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
-      <li>metricx.selector</li>
+      <li>metricx.grid</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -181,45 +181,36 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for metricx.selector</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">choice</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+  <h1>Source code for metricx.grid</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
 
-<span class="kn">from</span> <span class="nn">.metric</span> <span class="kn">import</span> <span class="n">Metric</span>
+<span class="kn">from</span> <span class="nn">bokeh.models</span> <span class="kn">import</span> <span class="n">Panel</span><span class="p">,</span> <span class="n">Tabs</span>
+
 <span class="kn">from</span> <span class="nn">.task</span> <span class="kn">import</span> <span class="n">Task</span>
 
 
-<div class="viewcode-block" id="Selector"><a class="viewcode-back" href="../../metricx.html#metricx.Selector">[docs]</a><span class="k">class</span> <span class="nc">Selector</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;This class implements methods for selecting models to run.</span>
+<span class="k">def</span> <span class="nf">_is_unique</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">a</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 
-<span class="sd">    Given a target metric, the Selector class provides methods for selecting</span>
-<span class="sd">    models to run. Examples of criteria that could be used include:</span>
 
-<span class="sd">        1. Choosing the model with the fewest samples.</span>
-<span class="sd">        2. Choosing the model with the highest variance.</span>
-<span class="sd">        3. Choosing the model such that a new sample would produce the greatest</span>
-<span class="sd">           change in the expected ranking.</span>
+<div class="viewcode-block" id="TaskGrid"><a class="viewcode-back" href="../../metricx.html#metricx.TaskGrid">[docs]</a><span class="k">class</span> <span class="nc">TaskGrid</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This class represents a set of tasks.</span>
 
 <span class="sd">    Attributes:</span>
-<span class="sd">        task: The target task.</span>
+<span class="sd">        tasks: A list of benchmark tasks.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="n">Task</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">=</span> <span class="n">task</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tasks</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Task</span><span class="p">]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tasks</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">task</span> <span class="ow">in</span> <span class="n">tasks</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tasks</span><span class="p">[</span><span class="n">task</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">task</span>
 
-<div class="viewcode-block" id="Selector.propose"><a class="viewcode-back" href="../../metricx.html#metricx.Selector.propose">[docs]</a>    <span class="k">def</span> <span class="nf">propose</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metric</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Metric</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;This selects a model to execute.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            metric: The target metric to optimize.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            The model to execute.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">model</span><span class="p">,</span> <span class="n">results</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">model</span>
-        <span class="k">return</span> <span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span></div></div>
+<div class="viewcode-block" id="TaskGrid.visualize"><a class="viewcode-back" href="../../metricx.html#metricx.TaskGrid.visualize">[docs]</a>    <span class="k">def</span> <span class="nf">visualize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">tabs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">task</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tasks</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">tabs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Panel</span><span class="p">(</span><span class="n">child</span><span class="o">=</span><span class="n">task</span><span class="o">.</span><span class="n">to_bokeh</span><span class="p">(),</span> <span class="n">title</span><span class="o">=</span><span class="n">task</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">Tabs</span><span class="p">(</span><span class="n">tabs</span><span class="o">=</span><span class="n">tabs</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

@@ -9,6 +9,14 @@ metricx package
 Submodules
 ----------
 
+metricx.grid module
+-------------------
+
+.. automodule:: metricx.grid
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 metricx.metric module
 ---------------------
 
