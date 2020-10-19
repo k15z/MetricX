@@ -4,9 +4,9 @@ from typing import Any, Dict, List, Optional, Union
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from bokeh.layouts import column
-from bokeh.models import Range1d
-from bokeh.plotting import figure
+from bokeh.layouts import column  # type: ignore
+from bokeh.models import Range1d  # type: ignore
+from bokeh.plotting import figure  # type: ignore
 from scipy.stats import norm  # type: ignore
 
 from metricx.metric import Metric
@@ -143,7 +143,7 @@ class Task:
         Args:
             path_to_csv: The path to write the csv.
         """
-        self.to_df.to_csv(path_to_csv, index=False)
+        self.to_df().to_csv(path_to_csv, index=False)
 
     def to_df(self) -> pd.DataFrame:
         """Export to DataFrame.
@@ -198,7 +198,7 @@ class Task:
         df = self.to_df()
         for i, metric in enumerate(self.metrics.values()):
             fig = figure(
-                plot_width=740,
+                plot_width=650,
                 plot_height=200,
                 title=metric.name,
                 toolbar_location=None,

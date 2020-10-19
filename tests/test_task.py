@@ -34,3 +34,4 @@ class TestTask(unittest.TestCase):
         assert len(task.to_df()) == 3
 
         assert task.to_figure()
+        assert task.to_bokeh()
