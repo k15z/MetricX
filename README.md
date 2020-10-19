@@ -6,9 +6,13 @@
 [![PyPI version](https://badge.fury.io/py/metricx.svg)](https://badge.fury.io/py/metricx)
 
 A library for managing, exploring, and analyzing benchmark data. Given a set of tasks
-and a set of models which can be evaluated on the tasks, `MetricX` provides tools 
-for keeping track of results, exporting the benchmark results, and generating 
-interactive visualizations of the data.
+and a set of models which can be evaluated on the tasks, `MetricX` provides a suite 
+of features including:
+
+ - Monitoring and logging of modeling results.
+ - Export to CSV, matplotlib, bokeh, and more!
+ - Smart selection of the next model to evaluate.
+ - Interactive HTML reports (deployable via Github Pages).
 
 ---
 
@@ -81,9 +85,10 @@ visualizations and more.
 
 ```python
 from metricx import TaskGrid
-from bokeh.io import output_notebook, show
 
-output_notebook()
 grid = TaskGrid([task])
-show(grid.to_bokeh())
+grid.to_html("benchmark.html")
 ```
+
+This will create a standalone HTML file which allows you to interactively
+explore the benchmark results.

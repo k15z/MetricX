@@ -2,8 +2,10 @@ from typing import List
 
 import numpy as np
 import pandas as pd
+from bokeh.embed import file_html  # type: ignore
 from bokeh.models import Panel, Tabs  # type: ignore
 from bokeh.plotting import figure  # type: ignore
+from bokeh.resources import CDN  # type: ignore
 from matplotlib import cm
 
 from .task import Task
@@ -29,6 +31,11 @@ class TaskGrid:
         self.tasks = {}
         for task in tasks:
             self.tasks[task.name] = task
+
+    def to_html(self, path_to_html):
+        html = file_html(self.to_bokeh(), CDN)
+        with open(path_to_html, "wt") as fout:
+            fout.write(html)
 
     def to_bokeh(self):
         tabs = []
